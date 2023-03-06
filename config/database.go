@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/go-jwt-test/helper"
+	"github.com/go-jwt-test/model"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -16,6 +17,9 @@ func ConnectDatabase(config *Config) *gorm.DB {
 	helper.ErrorPanic(err)
 
 	fmt.Println("connected successfully to the database")
+
+	// migrate struck User to Database
+	db.AutoMigrate(&model.User{})
 
 	return db
 
