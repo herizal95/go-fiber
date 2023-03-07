@@ -1,8 +1,6 @@
 package repository
 
 import (
-	"errors"
-
 	"github.com/go-jwt-test/data/request"
 	"github.com/go-jwt-test/helper"
 	"github.com/go-jwt-test/model"
@@ -36,12 +34,12 @@ func (c *UserRepositoryImpl) FindAll() []model.User {
 // FindById implements UserRepository
 func (c *UserRepositoryImpl) FindById(userId string) (model.User, error) {
 	var user model.User
-	result := c.Db.Find(&user, userId)
-	if result != nil {
-		return user, nil
-	} else {
-		return user, errors.New("user is not found")
+	result := c.Db.Raw("SELECT * FROM users WHERE uid = ?", userId).Scan(&user)
+	if result.Error != nil {
+		return user, result.Error
 	}
+
+	return user, nil
 }
 
 // Save implements UserRepository
